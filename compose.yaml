@@ -1,0 +1,23 @@
+name: home-assistant
+
+services:
+  home-assistant:
+    image: homeassistant/home-assistant:2026.5
+    volumes:
+      - ${HOME_ASSISTANT_DIR}:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    devices:
+      - /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1c807dde7bc2ef119728c0138148b910-if00-port0:/dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1c807dde7bc2ef119728c0138148b910-if00-port0
+
+  wireguard:
+    image: linuxserver/wireguard:1.0.20250521
+    volumes:
+      - ${WG_CONFIG_DIR}:/config
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
