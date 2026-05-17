@@ -1,6 +1,20 @@
 name: home-assistant
 
 services:
+
+  gluetun:
+    image: qmcgaw/gluetun:v3
+    environment:
+      - VPN_SERVICE_PROVIDER=protonvpn
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY=${PROTONVPN_WIREGUARD_PRIVATE_KEY}
+      - PORT_FORWARD_ONLY=on
+    ports:
+      - '0.0.0.0:9091:9091'
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
   home-assistant:
     image: homeassistant/home-assistant:2026.5
     volumes:
@@ -13,6 +27,30 @@ services:
       - NET_RAW
     devices:
       - /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1c807dde7bc2ef119728c0138148b910-if00-port0:/dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1c807dde7bc2ef119728c0138148b910-if00-port0
+
+  plex:
+    image: linuxserver/plex:1.43.1
+    volumes:
+      - ${PLEX_CONFIG}:/config
+      - ${TRANSMISSION_DOWNLOADS}:/downloads
+    environment:
+      - VERSION=docker
+      - PLEX_CLAIM=${PLEX_CLAIM}
+    network_mode: host
+    devices:
+      - /dev/dri:/dev/dri
+
+  transmission:
+    image: linuxserver/transmission:4.1.1
+    depends_on:
+      - gluetun
+    volumes:
+      - ${TRANSMISSION_CONFIG}:/config
+      - ${TRANSMISSION_DOWNLOADS}:/downloads
+    environment:
+      - USER=${TRANSMISSION_USERNAME}
+      - PASS=${TRANSMISSION_PASSWORD}
+    network_mode: 'service:gluetun'
 
   wireguard:
     image: linuxserver/wireguard:1.0.20250521
