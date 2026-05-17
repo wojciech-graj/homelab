@@ -1,7 +1,6 @@
 name: home-assistant
 
 services:
-
   gluetun:
     image: qmcgaw/gluetun:v3
     environment:
@@ -10,11 +9,15 @@ services:
       - WIREGUARD_PRIVATE_KEY=${PROTONVPN_WIREGUARD_PRIVATE_KEY}
       - PORT_FORWARD_ONLY=on
     ports:
+      - '0.0.0.0:7878:7878'
+      - '0.0.0.0:8989:8989'
       - '0.0.0.0:9091:9091'
+      - '0.0.0.0:9696:9696'
     cap_add:
       - NET_ADMIN
     devices:
       - /dev/net/tun:/dev/net/tun
+
   home-assistant:
     image: homeassistant/home-assistant:2026.5
     volumes:
@@ -33,12 +36,53 @@ services:
     volumes:
       - ${PLEX_CONFIG}:/config
       - ${TRANSMISSION_DOWNLOADS}:/downloads
+      - ${MEDIA_DIR}/movies:/movies
+      - ${MEDIA_DIR}/tv:/tv
     environment:
+      - PUID=1000
+      - PGID=1000
       - VERSION=docker
       - PLEX_CLAIM=${PLEX_CLAIM}
     network_mode: host
     devices:
       - /dev/dri:/dev/dri
+
+  prowlarr:
+    image: linuxserver/prowlarr:2.3.5
+    depends_on:
+      - gluetun
+    volumes:
+      - ${PROWLARR_CONFIG}:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+    network_mode: 'service:gluetun'
+
+  radarr:
+    image: linuxserver/radarr:6.1.1
+    depends_on:
+      - gluetun
+    volumes:
+      - ${RADARR_CONFIG}:/config
+      - ${TRANSMISSION_DOWNLOADS}:/downloads
+      - ${MEDIA_DIR}/movies:/movies
+    environment:
+      - PUID=1000
+      - PGID=1000
+    network_mode: 'service:gluetun'
+
+  sonarr:
+    image: linuxserver/sonarr:4.0.17
+    depends_on:
+      - gluetun
+    volumes:
+      - ${SONARR_CONFIG}:/config
+      - ${TRANSMISSION_DOWNLOADS}:/downloads
+      - ${MEDIA_DIR}/tv:/tv
+    environment:
+      - PUID=1000
+      - PGID=1000
+    network_mode: 'service:gluetun'
 
   transmission:
     image: linuxserver/transmission:4.1.1
@@ -48,6 +92,8 @@ services:
       - ${TRANSMISSION_CONFIG}:/config
       - ${TRANSMISSION_DOWNLOADS}:/downloads
     environment:
+      - PUID=1000
+      - PGID=1000
       - USER=${TRANSMISSION_USERNAME}
       - PASS=${TRANSMISSION_PASSWORD}
     network_mode: 'service:gluetun'
@@ -56,6 +102,9 @@ services:
     image: linuxserver/wireguard:1.0.20250521
     volumes:
       - ${WG_CONFIG_DIR}:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
     network_mode: host
     cap_add:
       - NET_ADMIN
