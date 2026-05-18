@@ -31,19 +31,18 @@ services:
     devices:
       - /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1c807dde7bc2ef119728c0138148b910-if00-port0:/dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1c807dde7bc2ef119728c0138148b910-if00-port0
 
-  plex:
-    image: linuxserver/plex:1.43.1
+  jellyfin:
+    image: jellyfin/jellyfin:2026051516
     volumes:
-      - ${PLEX_CONFIG}:/config
+      - ${JELLYFIN_CONFIG}:/config
+      - ${JELLYFIN_CACHE}:/cache
       - ${TRANSMISSION_DOWNLOADS}:/downloads
       - ${MEDIA_DIR}/movies:/movies
       - ${MEDIA_DIR}/tv:/tv
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - VERSION=docker
-      - PLEX_CLAIM=${PLEX_CLAIM}
     network_mode: host
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    user: 1000:1000
     devices:
       - /dev/dri:/dev/dri
 
