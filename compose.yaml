@@ -2,12 +2,15 @@ name: home-assistant
 
 services:
   gluetun:
-    image: qmcgaw/gluetun:v3
+    image: qmcgaw/gluetun:latest # TODO: switch to v3 tag once version newer than v3.41 is released
     environment:
       - VPN_SERVICE_PROVIDER=protonvpn
       - VPN_TYPE=wireguard
       - WIREGUARD_PRIVATE_KEY=${PROTONVPN_WIREGUARD_PRIVATE_KEY}
       - PORT_FORWARD_ONLY=on
+      - VPN_PORT_FORWARDING=on
+      - HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE='{"auth":"none"}'
+      - UPDATER_PERIOD=24h
     ports:
       - '0.0.0.0:7878:7878'
       - '0.0.0.0:8989:8989'
@@ -86,7 +89,8 @@ services:
   transmission:
     image: linuxserver/transmission:4.1.1
     depends_on:
-      - gluetun
+      gluetun:
+        condition: service_healthy
     volumes:
       - ${TRANSMISSION_CONFIG}:/config
       - ${TRANSMISSION_DOWNLOADS}:/downloads
@@ -95,6 +99,7 @@ services:
       - PGID=${GID}
       - USER=${TRANSMISSION_USERNAME}
       - PASS=${TRANSMISSION_PASSWORD}
+      - DOCKER_MODS=ghcr.io/michsior14/docker-mods:transmission-gluetun-port-update-v1.4.0
     network_mode: 'service:gluetun'
 
   wireguard:
