@@ -39,9 +39,7 @@ services:
     volumes:
       - ${JELLYFIN_CONFIG}:/config
       - ${JELLYFIN_CACHE}:/cache
-      - ${TRANSMISSION_DOWNLOADS}:/downloads
-      - ${MEDIA_DIR}/movies:/movies
-      - ${MEDIA_DIR}/tv:/tv
+      - ${MEDIA_DATA_DIR}:/data
     network_mode: host
     extra_hosts:
       - 'host.docker.internal:host-gateway'
@@ -66,8 +64,7 @@ services:
       - gluetun
     volumes:
       - ${RADARR_CONFIG}:/config
-      - ${TRANSMISSION_DOWNLOADS}:/downloads
-      - ${MEDIA_DIR}/movies:/movies
+      - ${MEDIA_DATA_DIR}:/data
     environment:
       - PUID=${UID}
       - PGID=${GID}
@@ -79,8 +76,7 @@ services:
       - gluetun
     volumes:
       - ${SONARR_CONFIG}:/config
-      - ${TRANSMISSION_DOWNLOADS}:/downloads
-      - ${MEDIA_DIR}/tv:/tv
+      - ${MEDIA_DATA_DIR}:/data
     environment:
       - PUID=${UID}
       - PGID=${GID}
@@ -93,7 +89,7 @@ services:
         condition: service_healthy
     volumes:
       - ${TRANSMISSION_CONFIG}:/config
-      - ${TRANSMISSION_DOWNLOADS}:/downloads
+      - ${MEDIA_DATA_DIR}:/data
     environment:
       - PUID=${UID}
       - PGID=${GID}
