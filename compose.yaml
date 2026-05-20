@@ -42,7 +42,7 @@ services:
     network_mode: host
     extra_hosts:
       - 'host.docker.internal:host-gateway'
-    user: 1000:1000
+    user: ${UID}:${GID}
     devices:
       - /dev/dri:/dev/dri
 
@@ -53,8 +53,8 @@ services:
     volumes:
       - ${PROWLARR_CONFIG}:/config
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${UID}
+      - PGID=${GID}
     network_mode: 'service:gluetun'
 
   radarr:
@@ -66,8 +66,8 @@ services:
       - ${TRANSMISSION_DOWNLOADS}:/downloads
       - ${MEDIA_DIR}/movies:/movies
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${UID}
+      - PGID=${GID}
     network_mode: 'service:gluetun'
 
   sonarr:
@@ -79,8 +79,8 @@ services:
       - ${TRANSMISSION_DOWNLOADS}:/downloads
       - ${MEDIA_DIR}/tv:/tv
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${UID}
+      - PGID=${GID}
     network_mode: 'service:gluetun'
 
   transmission:
@@ -91,8 +91,8 @@ services:
       - ${TRANSMISSION_CONFIG}:/config
       - ${TRANSMISSION_DOWNLOADS}:/downloads
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${UID}
+      - PGID=${GID}
       - USER=${TRANSMISSION_USERNAME}
       - PASS=${TRANSMISSION_PASSWORD}
     network_mode: 'service:gluetun'
@@ -102,8 +102,8 @@ services:
     volumes:
       - ${WG_CONFIG_DIR}:/config
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${UID}
+      - PGID=${GID}
     network_mode: host
     cap_add:
       - NET_ADMIN
