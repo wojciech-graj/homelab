@@ -47,6 +47,22 @@ services:
     devices:
       - /dev/dri:/dev/dri
 
+  mpd:
+    image: giof71/mpd-alsa:vanilla-trixie-0.24.4
+    volumes:
+      - ${MEDIA_DATA_DIR}/music:/music:ro
+      - ${MEDIA_DATA_DIR}/playlists:/playlists
+      - ${MPD_DB}:/db
+    environment:
+      - USER_MODE=Y
+      - PUID=${UID}
+      - PGID=${GID}
+      - AUDIO_GID=29
+      - ALSA_OUTPUT_CREATE=yes
+    network_mode: host
+    devices:
+      - /dev/snd:/dev/snd
+
   prowlarr:
     image: linuxserver/prowlarr:2.3.5
     depends_on:
