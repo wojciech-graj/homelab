@@ -1,6 +1,20 @@
 name: home-assistant
 
 services:
+
+  bluez-speaker:
+    image: wgraj/bluez-speaker:0.0.1
+    container_name: bluez-speaker
+    volumes:
+      - /var/run/dbus:/var/run/dbus
+      - bluetooth:/var/lib/bluetooth
+    environment:
+      - DBUS_SYSTEM_BUS_ADDRESS=unix:path=/var/run/dbus/system_bus_socket
+      - MAC=E8:48:B8:C8:20:00
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+
   gluetun:
     image: qmcgaw/gluetun:latest # TODO: switch to v3 tag once version newer than v3.41 is released
     container_name: gluetun
@@ -57,15 +71,36 @@ services:
       - ${MEDIA_DATA_DIR}/music:/music:ro
       - ${MEDIA_DATA_DIR}/playlists:/playlists
       - ${MPD_DB}:/db
+      - pipewire:/pipewire
+      - ./mpd_user_config:/user/config
     environment:
       - USER_MODE=Y
       - PUID=${UID}
       - PGID=${GID}
       - AUDIO_GID=29
-      - ALSA_OUTPUT_CREATE=yes
+      - PULSE_AUDIO_OUTPUT_CREATE=yes
     network_mode: host
+
+  pipewire:
+    image: wgraj/pipewire:0.0.2
+    container_name: pipewire
+    volumes:
+      - pipewire:/pipewire
+      - /run/udev:/run/udev:ro
+      - /var/run/dbus:/var/run/dbus:ro
+    environment:
+      - PUID=${UID}
+      - PGID=${GID}
+      - BLUETOOTH_A2DP=1
+    network_mode: host
+    cap_add:
+      - SYS_NICE
+      - IPC_LOCK
     devices:
       - /dev/snd:/dev/snd
+    ulimits:
+      rtprio: 95
+      memlock: -1
 
   prowlarr:
     image: linuxserver/prowlarr:2.3.5
@@ -133,3 +168,12 @@ services:
     network_mode: host
     cap_add:
       - NET_ADMIN
+
+volumes:
+  pipewire:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+
+  bluetooth:
