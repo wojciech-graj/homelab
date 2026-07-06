@@ -38,7 +38,7 @@ services:
       - /dev/net/tun:/dev/net/tun
 
   home-assistant:
-    image: homeassistant/home-assistant:2026.5
+    image: homeassistant/home-assistant:2026.7
     container_name: home-assistant
     volumes:
       - ${HOME_ASSISTANT_DIR}:/config
@@ -52,7 +52,7 @@ services:
       - /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1c807dde7bc2ef119728c0138148b910-if00-port0:/dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1c807dde7bc2ef119728c0138148b910-if00-port0
 
   jellyfin:
-    image: jellyfin/jellyfin:2026051516
+    image: jellyfin/jellyfin:12.0-rc2
     container_name: jellyfin
     volumes:
       - ${JELLYFIN_CONFIG}:/config
@@ -104,7 +104,7 @@ services:
       memlock: -1
 
   prowlarr:
-    image: linuxserver/prowlarr:2.3.5
+    image: linuxserver/prowlarr:2.4.0
     container_name: prowlarr
     depends_on:
       - gluetun
@@ -116,7 +116,7 @@ services:
     network_mode: 'service:gluetun'
 
   radarr:
-    image: linuxserver/radarr:6.1.1
+    image: linuxserver/radarr:6.2.1
     container_name: radarr
     depends_on:
       - gluetun
@@ -129,7 +129,7 @@ services:
     network_mode: 'service:gluetun'
 
   sonarr:
-    image: linuxserver/sonarr:4.0.17
+    image: linuxserver/sonarr:4.0.19
     container_name: sonarr
     depends_on:
       - gluetun
@@ -142,7 +142,7 @@ services:
     network_mode: 'service:gluetun'
 
   transmission:
-    image: linuxserver/transmission:4.1.1
+    image: linuxserver/transmission:4.1.3
     container_name: transmission
     depends_on:
       gluetun:
