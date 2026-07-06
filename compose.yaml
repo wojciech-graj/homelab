@@ -3,12 +3,13 @@ name: home-assistant
 services:
 
   bluez-speaker:
-    image: wgraj/bluez-speaker:0.0.1
+    image: wgraj/bluez-speaker:0.1.0
     container_name: bluez-speaker
     volumes:
       - /var/run/dbus:/var/run/dbus
       - bluetooth:/var/lib/bluetooth
     environment:
+      - NAME=wgraj-speaker
       - DBUS_SYSTEM_BUS_ADDRESS=unix:path=/var/run/dbus/system_bus_socket
       - MAC=E8:48:B8:C8:20:00
     network_mode: host
@@ -82,7 +83,7 @@ services:
     network_mode: host
 
   pipewire:
-    image: wgraj/pipewire:0.0.2
+    image: wgraj/pipewire:0.1.0
     container_name: pipewire
     volumes:
       - pipewire:/pipewire
