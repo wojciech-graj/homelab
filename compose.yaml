@@ -1,7 +1,6 @@
 name: home-assistant
 
 services:
-
   bluez-speaker:
     image: wgraj/bluez-speaker:0.1.0
     container_name: bluez-speaker
@@ -15,6 +14,19 @@ services:
     network_mode: host
     cap_add:
       - NET_ADMIN
+
+  cups:
+    image: chuckcharlie/cups-avahi-airprint:2.1.3
+    container_name: cups
+    volumes:
+      - ${CUPS_CONFIG}:/config
+    environment:
+      CUPSADMIN: ${CUPSADMIN}
+      CUPSPASSWORD: ${CUPSPASSWORD}
+      AVAHI_HOSTNAME: "printer"
+    network_mode: host
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
 
   gluetun:
     image: qmcgaw/gluetun:latest # TODO: switch to v3 tag once version newer than v3.41 is released
