@@ -2,7 +2,7 @@ name: home-assistant
 
 services:
   bluez-speaker:
-    image: wgraj/bluez-speaker:0.1.0
+    image: wgraj/bluez-speaker:0.1.1
     container_name: bluez-speaker
     volumes:
       - /var/run/dbus:/var/run/dbus
@@ -10,7 +10,6 @@ services:
     environment:
       - NAME=wgraj-speaker
       - DBUS_SYSTEM_BUS_ADDRESS=unix:path=/var/run/dbus/system_bus_socket
-      - MAC=E8:48:B8:C8:20:00
     network_mode: host
     cap_add:
       - NET_ADMIN
@@ -74,6 +73,9 @@ services:
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     user: ${UID}:${GID}
+    group_add:
+      - "${RENDER_GID}"
+      - "${VIDEO_GID}"
     devices:
       - /dev/dri:/dev/dri
 
