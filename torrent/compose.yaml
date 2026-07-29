@@ -50,6 +50,18 @@ services:
     network_mode: 'service:gluetun'
     restart: unless-stopped
 
+  recyclarr:
+    image: recyclarr/recyclarr:8.7.0
+    container_name: recyclarr
+    depends_on:
+      - radarr
+      - sonarr
+    volumes:
+      - ./recyclarr:/config
+    network_mode: 'service:gluetun'
+    restart: "no"
+    user: ${UID}:${GID}
+
   sonarr:
     image: linuxserver/sonarr:4.0.19
     container_name: sonarr

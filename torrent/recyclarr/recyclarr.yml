@@ -1,0 +1,133 @@
+# yaml-language-server: $schema=https://schemas.recyclarr.dev/latest/config-schema.json
+
+radarr:
+  movies:
+    base_url: http://localhost:7878
+    api_key: !secret radarr_apikey
+    delete_old_custom_formats: true
+
+    quality_definition:
+      type: movie
+
+    quality_profiles:
+      - trash_id: d1d67249d3890e49bc12e275d989a7e9
+        name: Default
+        reset_unmatched_scores:
+          enabled: true
+        upgrade:
+          allowed: true
+          until_quality: Bluray-1080p
+        min_format_score: 0
+
+        qualities:
+          - name: Bluray-1080p
+          - name: WEBDL-1080p
+          - name: WEBRip-1080p
+          - name: HDTV-1080p
+          - name: Bluray-720p
+          - name: WEBDL-720p
+          - name: WEBRip-720p
+          - name: HDTV-720p
+          - name: Remux-1080p
+          - name: Bluray-576p
+          - name: Bluray-480p
+          - name: WEBDL-480p
+          - name: WEBRip-480p
+          - name: DVD-R
+          - name: DVD
+
+    custom_formats:
+      - trash_ids:
+          - 493b6d1dbec3c3364c59d7607f7e3405 # HDR (Catch-all including HDR10)
+          - caa37d0df9c348912df1fb1d88f9273a # HDR10+ Boost
+          - b337d6812e06c200ec9a2d3cfa9d20a7 # DV Boost
+          - 923b6abef9b17f937fab56cfcf89e1f1 # DV (w/o HDR fallback)
+          - 9364dd386c9b4a1100dde8264690add7 # HLG
+          - d6e9318c875905d6cfb5bee961afcea9 # Language: Not Original
+        assign_scores_to:
+          - name: Default
+            score: -10000
+
+      - trash_ids:
+          - 2899d84dc9372de3408e6d8cc18e9666 # x264
+        assign_scores_to:
+          - name: Default
+            score: 2
+
+      - trash_ids:
+          - 9170d55c319f4fe40da8711ba9d8050d # x265
+        assign_scores_to:
+          - name: Default
+            score: 1
+
+      - trash_ids:
+          - cae4ca30163749b891686f95532519bd # AV1
+          - dc98083864ea246d05a42df0d05f81cc # x265 (HD)
+        assign_scores_to:
+          - name: Default
+            score: 0
+
+sonarr:
+  series:
+    base_url: http://localhost:8989
+    api_key: !secret sonarr_apikey
+    delete_old_custom_formats: true
+
+    quality_definition:
+      type: series
+
+    quality_profiles:
+      - trash_id: fe9470e577c300a5ad9a3274f6d1cdf2
+        name: Default
+        reset_unmatched_scores:
+          enabled: true
+        upgrade:
+          allowed: true
+          until_quality: Bluray-1080p
+        min_format_score: 0
+
+        qualities:
+          - name: Bluray-1080p
+          - name: WEBDL-1080p
+          - name: WEBRip-1080p
+          - name: HDTV-1080p
+          - name: Bluray-720p
+          - name: WEBDL-720p
+          - name: WEBRip-720p
+          - name: HDTV-720p
+          - name: Bluray-576p
+          - name: Bluray-480p
+          - name: WEBDL-480p
+          - name: WEBRip-480p
+          - name: DVD
+
+    custom_formats:
+      - trash_ids:
+          - 505d871304820ba7106b693be6fe4a9e # HDR (Catch-all including HDR10)
+          - 0c4b99df9206d2cfac3c05ab897dd62a # HDR10+ Boost
+          - 7c3a61a9c6cb04f52f1544be6d44a026 # DV Boost
+          - 9b27ab6498ec0f31a3353992e19434ca # DV (w/o HDR fallback)
+          - 17e889ce13117940092308f48b48b45b # HLG
+          - ae575f95ab639ba5d15f663bf019e3e8 # Language: Not Original
+        assign_scores_to:
+          - name: Default
+            score: -10000
+
+      - trash_ids:
+          - cddfb4e32db826151d97352b8e37c648 # x264
+        assign_scores_to:
+          - name: Default
+            score: 2
+
+      - trash_ids:
+          - c9eafd50846d299b862ca9bb6ea91950 # x265
+        assign_scores_to:
+          - name: Default
+            score: 1
+
+      - trash_ids:
+          - 15a05bc7c1a36e2b57fd628f8977e2fc # AV1
+          - 47435ece6b99a0b477caf360e79ba0bb # x265 (HD)
+        assign_scores_to:
+          - name: Default
+            score: 0
