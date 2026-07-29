@@ -1,0 +1,65 @@
+name: audio
+
+services:
+  bluez-speaker:
+    image: wgraj/bluez-speaker:0.1.1
+    container_name: bluez-speaker
+    volumes:
+      - /var/run/dbus:/var/run/dbus
+      - bluetooth:/var/lib/bluetooth
+    environment:
+      - NAME=wgraj-speaker
+      - DBUS_SYSTEM_BUS_ADDRESS=unix:path=/var/run/dbus/system_bus_socket
+    network_mode: host
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+
+  mpd:
+    image: giof71/mpd-alsa:vanilla-trixie-0.24.4
+    container_name: mpd
+    volumes:
+      - ${MEDIA_DATA_DIR}/music:/music:ro
+      - ${MEDIA_DATA_DIR}/playlists:/playlists
+      - ${MPD_DB}:/db
+      - pipewire:/pipewire
+      - ./mpd_user_config:/user/config
+    environment:
+      - USER_MODE=Y
+      - PUID=${UID}
+      - PGID=${GID}
+      - AUDIO_GID=29
+      - PULSE_AUDIO_OUTPUT_CREATE=yes
+    network_mode: host
+    restart: unless-stopped
+
+  pipewire:
+    image: wgraj/pipewire:0.1.0
+    container_name: pipewire
+    volumes:
+      - pipewire:/pipewire
+      - /run/udev:/run/udev:ro
+      - /var/run/dbus:/var/run/dbus:ro
+    environment:
+      - PUID=${UID}
+      - PGID=${GID}
+      - BLUETOOTH_A2DP=1
+    network_mode: host
+    restart: unless-stopped
+    cap_add:
+      - SYS_NICE
+      - IPC_LOCK
+    devices:
+      - /dev/snd:/dev/snd
+    ulimits:
+      rtprio: 95
+      memlock: -1
+
+volumes:
+  pipewire:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+
+  bluetooth:

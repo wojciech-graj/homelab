@@ -1,0 +1,15 @@
+name: ingress
+
+services:
+  wireguard:
+    image: linuxserver/wireguard:1.0.20250521
+    container_name: wireguard
+    volumes:
+      - ${WG_CONFIG_DIR}:/config
+    environment:
+      - PUID=${UID}
+      - PGID=${GID}
+    network_mode: host
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
