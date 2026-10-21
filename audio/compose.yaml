@@ -2,7 +2,7 @@ name: audio
 
 services:
   bluez-speaker:
-    image: wgraj/bluez-speaker:2026-07-26
+    image: wgraj/bluez-speaker:2026-10-18
     container_name: bluez-speaker
     volumes:
       - /var/run/dbus:/var/run/dbus
@@ -34,7 +34,7 @@ services:
     restart: unless-stopped
 
   pipewire:
-    image: wgraj/pipewire:2026-07-26
+    image: wgraj/pipewire:2026-10-18
     container_name: pipewire
     volumes:
       - pipewire:/pipewire

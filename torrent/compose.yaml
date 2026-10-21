@@ -24,7 +24,7 @@ services:
       - /dev/net/tun:/dev/net/tun
 
   prowlarr:
-    image: linuxserver/prowlarr:2.5.2
+    image: linuxserver/prowlarr:2.6.5
     container_name: prowlarr
     depends_on:
       - gluetun
@@ -37,7 +37,7 @@ services:
     restart: unless-stopped
 
   radarr:
-    image: linuxserver/radarr:6.3.0
+    image: linuxserver/radarr:6.4.4
     container_name: radarr
     depends_on:
       - gluetun
@@ -51,7 +51,7 @@ services:
     restart: unless-stopped
 
   recyclarr:
-    image: recyclarr/recyclarr:8.7.0
+    image: recyclarr/recyclarr:8.8.0
     container_name: recyclarr
     depends_on:
       - radarr
@@ -63,7 +63,7 @@ services:
     user: ${UID}:${GID}
 
   sonarr:
-    image: linuxserver/sonarr:4.0.19
+    image: linuxserver/sonarr:4.0.20
     container_name: sonarr
     depends_on:
       - gluetun
