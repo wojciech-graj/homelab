@@ -2,7 +2,7 @@ name: home-assistant
 
 services:
   home-assistant:
-    image: homeassistant/home-assistant:2026.10
+    image: homeassistant/home-assistant:2026.11
     container_name: home-assistant
     volumes:
       - ${HOME_ASSISTANT_DIR}:/config

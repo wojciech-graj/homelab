@@ -2,7 +2,7 @@ name: cups
 
 services:
   cups:
-    image: chuckcharlie/cups-avahi-airprint:2.1.3
+    image: chuckcharlie/cups-avahi-airprint:2.2.0
     container_name: cups
     volumes:
       - ${CUPS_CONFIG}:/config
